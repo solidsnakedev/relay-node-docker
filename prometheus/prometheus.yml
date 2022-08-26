@@ -1,0 +1,32 @@
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'codelab-monitor'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label job=<job_name> to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+    static_configs:
+      # Replace <ip-address> with block producer ip address
+      - targets: ['<ip-address>:9100']
+        labels:
+          alias: 'block-producer'
+      # Replace <ip-address> with block producer ip address
+      - targets: ['<ip-address>:12798']
+        labels:
+          alias: 'block-producer-cardano-node'
+          type:  'cardano-node'
+      # Replace <ip-address> with relay ip address
+      - targets: ['<ip-address>:9100']
+        labels:
+          alias: 'relay-1'
+      # Replace <ip-address> with relay ip address
+      - targets: ['<ip-address>:12798']
+        labels:
+          alias: 'relay-1-cardano-node'
+          type:  'cardano-node'
