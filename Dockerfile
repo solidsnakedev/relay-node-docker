@@ -101,6 +101,8 @@ RUN cd src && \
 # Delete src folder
 RUN rm -r /src
 
+RUN mkdir -p /node/configuration
+
 # Get latest config files from https://book.world.dev.cardano.org/environments.html
 #RUN wget -P /node/configuration \
 #    https://book.world.dev.cardano.org/environments/mainnet/config.json \
