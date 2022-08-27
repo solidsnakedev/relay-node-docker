@@ -102,13 +102,21 @@ RUN cd src && \
 RUN rm -r /src
 
 # Get latest config files from https://book.world.dev.cardano.org/environments.html
-RUN wget -P /node/configuration \
-    https://book.world.dev.cardano.org/environments/mainnet/config.json \
-    https://book.world.dev.cardano.org/environments/mainnet/byron-genesis.json \
-    https://book.world.dev.cardano.org/environments/mainnet/shelley-genesis.json \
-    https://book.world.dev.cardano.org/environments/mainnet/alonzo-genesis.json
+#RUN wget -P /node/configuration \
+#    https://book.world.dev.cardano.org/environments/mainnet/config.json \
+#    https://book.world.dev.cardano.org/environments/mainnet/byron-genesis.json \
+#    https://book.world.dev.cardano.org/environments/mainnet/shelley-genesis.json \
+#    https://book.world.dev.cardano.org/environments/mainnet/alonzo-genesis.json
 
-# https://book.world.dev.cardano.org/environments/mainnet/topology.json 
+COPY configuration/shelley-genesis.json /node/configuration
+COPY configuration/byron-genesis.json /node/configuration
+COPY configuration/alonzo-genesis.json /node/configuration
+COPY configuration/config.json /node/configuration
+
+# Change config to save them in /node/log/node.log file instead of stdout
+RUN sed -i 's/StdoutSK/FileSK/' /node/configuration/config.json && \
+    sed -i 's/stdout/\/node\/logs\/node.log/' /node/configuration/config.json && \
+    sed -i 's/\"127.0.0.1\"/\"0.0.0.0\"/' /node/configuration/config.json
 
 # Block producer node IP Address
 ARG BLOCKPRODUCING_IP
@@ -116,12 +124,6 @@ ARG BLOCKPRODUCING_IP
 ARG BLOCKPRODUCING_PORT
 # Download topology from nearest peers
 RUN curl -s -o /node/configuration/topology.json "https://api.clio.one/htopology/v1/fetch/?max=6&customPeers=${BLOCKPRODUCING_IP}:${BLOCKPRODUCING_PORT}:1|relays-new.cardano-mainnet.iohk.io:3001:2"
-
-
-# Change config to save them in /node/log/node.log file instead of stdout
-RUN sed -i 's/StdoutSK/FileSK/' /node/configuration/config.json && \
-    sed -i 's/stdout/\/node\/logs\/node.log/' /node/configuration/config.json && \
-    sed -i 's/\"127.0.0.1\"/\"0.0.0.0\"/' /node/configuration/config.json
 
 # Update libsodium PATH
 ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
