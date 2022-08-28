@@ -151,4 +151,4 @@ COPY topology-updater-cron /etc/cron.d/
 RUN chmod +x /etc/cron.d/topology-updater-cron
 
 # Run cardano-node at the startup
-CMD [ "cron && /usr/local/bin/run-cardano-node.sh" ]
+CMD [ "/usr/local/bin/run-cardano-node.sh" ]
