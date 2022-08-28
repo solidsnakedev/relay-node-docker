@@ -75,8 +75,6 @@ COPY --from=builder /usr/local/bin/cardano-node /usr/local/bin
 RUN apt-get update -y && \
     apt-get install automake build-essential pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make g++ tmux git jq wget libncursesw5 libtool autoconf liblmdb-dev curl vim -y
 
-RUN apt-get install cron
-
 #Install libsodium
 RUN mkdir src && \
     cd src && \
@@ -146,11 +144,5 @@ COPY cardano-scripts/ /usr/local/bin
 # Set executable permits
 RUN /bin/bash -c "chmod +x /usr/local/bin/*.sh"
 
-COPY topology-updater-cron /etc/cron.d
-
-RUN chmod 0644 /etc/cron.d/topology-updater-cron
-
-RUN crontab /etc/cron.d/topology-updater-cron
-
 # Run cardano-node at the startup
-CMD [ "cron && /usr/local/bin/run-cardano-node.sh" ]
+CMD [ "/usr/local/bin/run-cardano-node.sh" ]
