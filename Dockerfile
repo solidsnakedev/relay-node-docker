@@ -99,19 +99,12 @@ RUN cd src && \
 # Delete src folder
 RUN rm -r /src
 
-RUN mkdir -p /node/configuration
-
-# Get latest config files from https://book.world.dev.cardano.org/environments.html
-#RUN wget -P /node/configuration \
-#    https://book.world.dev.cardano.org/environments/mainnet/config.json \
-#    https://book.world.dev.cardano.org/environments/mainnet/byron-genesis.json \
-#    https://book.world.dev.cardano.org/environments/mainnet/shelley-genesis.json \
-#    https://book.world.dev.cardano.org/environments/mainnet/alonzo-genesis.json
-
-COPY configuration/shelley-genesis.json /node/configuration
-COPY configuration/byron-genesis.json /node/configuration
-COPY configuration/alonzo-genesis.json /node/configuration
-COPY configuration/config.json /node/configuration
+# Get latest config files
+RUN wget -P /node/configuration \
+    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/config.json \
+    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/byron-genesis.json \
+    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/shelley-genesis.json \
+    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/alonzo-genesis.json
 
 # Change config to save them in /node/log/node.log file instead of stdout
 RUN sed -i 's/StdoutSK/FileSK/' /node/configuration/config.json && \
