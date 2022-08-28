@@ -49,11 +49,11 @@ Remember to replace <ip-address> in ./prometheus/prometheus.yml with the proper 
 
 ## Build cardano node docker image
 
-* replace `< block-producer-ip-address >` with the IP Address of the block producer node
-* replace `< block-producer-port >` with the Port number of the block producer node
+* replace `<block-producer-ip-address>` with the IP Address of the block producer node
+* replace `<block-producer-port>` with the Port number of the block producer node
 
 ```
 DOCKER_BUILDKIT=1 docker compose build \
-    --build-arg BLOCKPRODUCING_IP=< block-producer-ip-address > \
-    --build-arg BLOCKPRODUCING_PORT=< block-producer-port >
+    --build-arg BLOCKPRODUCING_IP=<block-producer-ip-address> \
+    --build-arg BLOCKPRODUCING_PORT=<block-producer-port>
 ```
