@@ -146,9 +146,9 @@ COPY cardano-scripts/ /usr/local/bin
 # Set executable permits
 RUN /bin/bash -c "chmod +x /usr/local/bin/*.sh"
 
-COPY topology-updater-cron /etc/cron.d/
+COPY topology-updater-cron /etc/cron.d
 
-RUN chmod +x /etc/cron.d/topology-updater-cron
+RUN chmod 0644 /etc/cron.d/topology-updater-cron
 
 RUN crontab /etc/cron.d/topology-updater-cron
 
