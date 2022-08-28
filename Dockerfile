@@ -146,8 +146,9 @@ COPY cardano-scripts/ /usr/local/bin
 # Set executable permits
 RUN /bin/bash -c "chmod +x /usr/local/bin/*.sh"
 
-# Run topologyUpdater script every hour at minute 33
-RUN crontab -l | { cat; echo "33 * * * * /usr/local/bin/topologyUpdater.sh"; } | crontab -
+COPY topology-updater-cron /etc/cron.d/
+
+RUN chmod +x /etc/cron.d/topology-updater-cron
 
 # Run cardano-node at the startup
-CMD [ "/usr/local/bin/run-cardano-node.sh" ]
+CMD [ "cron && /usr/local/bin/run-cardano-node.sh" ]
