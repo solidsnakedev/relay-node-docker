@@ -109,6 +109,7 @@ RUN wget -P /node/configuration \
 # Change config to save them in /node/log/node.log file instead of stdout
 RUN sed -i 's/StdoutSK/FileSK/' /node/configuration/config.json && \
     sed -i 's/stdout/\/node\/logs\/node.log/' /node/configuration/config.json && \
+    sed -i 's/\"TraceBlockFetchDecisions\": false/\"TraceBlockFetchDecisions\": true/' /node/configuration/config.json && \
     sed -i 's/\"127.0.0.1\"/\"0.0.0.0\"/' /node/configuration/config.json
 
 # Block producer node IP Address
