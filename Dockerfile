@@ -60,7 +60,8 @@ RUN echo "package cardano-crypto-praos" >>  /src/cardano-node/cabal.project.loca
 
 # Build cardano-node & cardano-cli
 RUN cd src/cardano-node && \
-    cabal build all
+    cabal update && \
+    cabal build cardano-node cardano-cli
 
 # Find and copy binaries to ~/.local/bin
 RUN cp $(find /src/cardano-node/dist-newstyle/build -type f -name "cardano-cli") /usr/local/bin/cardano-cli

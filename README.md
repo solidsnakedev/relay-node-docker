@@ -57,3 +57,35 @@ DOCKER_BUILDKIT=1 docker compose build \
     --build-arg BLOCKPRODUCING_IP=<block-producer-ip-address> \
     --build-arg BLOCKPRODUCING_PORT=<block-producer-port>
 ```
+
+## Upgrade Node
+
+```
+$ docker compose down
+```
+```
+$ DOCKER_BUILDKIT=1 docker compose build \
+    --build-arg BLOCKPRODUCING_IP=<blockproducing-ip-address> \
+    --build-arg BLOCKPRODUCING_PORT=<blockproducing-port>
+```
+
+## Installing Crontab
+Inside relay-node docker container
+
+```
+docker exec -it cardano-node-relay bash
+```
+
+```
+apt install crontab
+```
+
+Edit crontab file
+```
+crontab -e
+```
+
+Add following instructions
+```
+33 * * * * /usr/local/bin/topologyUpdater.sh
+```
