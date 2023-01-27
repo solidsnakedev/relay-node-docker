@@ -68,6 +68,14 @@ $ DOCKER_BUILDKIT=1 docker compose build \
     --build-arg BLOCKPRODUCING_IP=<blockproducing-ip-address> \
     --build-arg BLOCKPRODUCING_PORT=<blockproducing-port>
 ```
+or 
+```
+$ DOCKER_BUILDKIT=1 docker compose build cardano-node-relay \
+    --no-cache \
+    --build-arg BLOCKPRODUCING_IP=<blockproducing-ip-address> \
+    --build-arg BLOCKPRODUCING_PORT=<blockproducing-port>
+```
+
 
 ## Installing Crontab
 Inside relay-node docker container
