@@ -77,7 +77,7 @@ docker exec -it cardano-node-relay bash
 ```
 
 ```
-apt install crontab
+apt install cron
 ```
 
 Edit crontab file
