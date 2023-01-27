@@ -1,4 +1,4 @@
-FROM ubuntu:rolling AS builder
+FROM ubuntu:latest AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
@@ -67,7 +67,7 @@ RUN cd src/cardano-node && \
 RUN cp $(find /src/cardano-node/dist-newstyle/build -type f -name "cardano-cli") /usr/local/bin/cardano-cli
 RUN cp $(find /src/cardano-node/dist-newstyle/build -type f -name "cardano-node") /usr/local/bin/cardano-node
 
-FROM ubuntu:rolling
+FROM ubuntu:latest
 
 COPY --from=builder /usr/local/bin/cardano-cli /usr/local/bin
 COPY --from=builder /usr/local/bin/cardano-node /usr/local/bin
