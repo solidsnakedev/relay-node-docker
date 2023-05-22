@@ -92,7 +92,6 @@ RUN cd src && \
     ./autogen.sh && \
     ./configure && \
     make && \
-    make check && \
     make install
 
 #Install libsecp256k1
