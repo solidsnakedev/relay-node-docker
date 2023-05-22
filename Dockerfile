@@ -108,13 +108,15 @@ RUN cd src && \
 # Delete src folder
 RUN rm -r /src
 
+# https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/config.json \
 # Get latest config files
 RUN wget -P /node/configuration \
-    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/config.json \
     https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/byron-genesis.json \
     https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/shelley-genesis.json \
     https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/alonzo-genesis.json \
     https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/conway-genesis.json
+
+COPY config.json /node/configuration
 
 # Change config to save them in /node/log/node.log file instead of stdout
 RUN sed -i 's/StdoutSK/FileSK/' /node/configuration/config.json && \
