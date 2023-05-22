@@ -85,7 +85,8 @@ RUN TAG=$(curl -s https://api.github.com/repos/input-output-hk/cardano-node/rele
     mv cardano-cli /usr/local/bin
 
 # Install libsodium
-RUN cd src && \
+RUN mkdir src && \
+    cd src && \
     git clone https://github.com/input-output-hk/libsodium && \
     cd libsodium && \
     git checkout dbb48cc && \
