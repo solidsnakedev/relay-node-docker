@@ -37,10 +37,10 @@ services:
     depends_on:
       - node_exporter
 
-# check -> https://community.grafana.com/t/new-docker-install-with-persistent-storage-permission-problem/10896/5
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana-enterprise
     container_name: grafana
+    user: '0'
     ports:
       - 3000:3000 # Grafana monitor port
     volumes:
