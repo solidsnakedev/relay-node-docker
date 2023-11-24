@@ -83,7 +83,7 @@ RUN <<EOT
                 accessPoints: [
                     {
                         address: $block_producer_ip,
-                        port: $block_producer_port,
+                        port: $block_producer_port | tonumber ,
                     }
                 ],
                 advertise: false,
