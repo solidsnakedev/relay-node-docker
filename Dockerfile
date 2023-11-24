@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM ubuntu:latest
 
 # Install Cardano dependencies
@@ -6,12 +7,19 @@ RUN apt-get update -y && \
 
 RUN mkdir src
 
-RUN TAG=$(curl -s https://api.github.com/repos/input-output-hk/cardano-node/releases/latest | jq -r .tag_name) && \
+ARG TAG
+
+RUN <<EOT
+    [ -z ${TAG} ] \
+    && URL=$(curl -s https://api.github.com/repos/input-output-hk/cardano-node/releases/latest | jq -r '.assets[] | select(.name | contains("linux")) | .browser_download_url') \
+    || URL=$( curl -s https://api.github.com/repos/input-output-hk/cardano-node/releases/tags/${TAG} | jq -r '.assets[] | select(.name | contains("linux")) | .browser_download_url')
+
     cd src && \
-    wget -cO - https://github.com/input-output-hk/cardano-node/releases/download/${TAG}/cardano-node-${TAG}-linux.tar.gz > cardano-node.tar.gz && \
-    tar -xvf cardano-node.tar.gz && \
-    mv cardano-node /usr/local/bin && \
+    wget -cO - ${URL} > cardano-node.tar.gz && \
+    tar -xvf cardano-node.tar.gz &&
+    mv cardano-node /usr/local/bin &&
     mv cardano-cli /usr/local/bin
+EOT
 
 # Install libsodium
 RUN cd src && \
@@ -45,9 +53,13 @@ RUN wget -P /node/configuration \
     https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/byron-genesis.json \
     https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/shelley-genesis.json \
     https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/alonzo-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/conway-genesis.json
+    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/conway-genesis.json \
+    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/config.json
 
-COPY config.json /node/configuration
+# Enable EnableP2P for relays
+RUN temp_file=$(mktemp) && \
+    jq '.EnableP2P |= true' /node/configuration/config.json > "$temp_file" && \
+    mv "$temp_file" /node/configuration/config.json
 
 # Change config to save them in /node/log/node.log file instead of stdout
 RUN sed -i 's/StdoutSK/FileSK/' /node/configuration/config.json && \
@@ -61,30 +73,53 @@ ARG BLOCKPRODUCING_IP
 # Block producer port
 ARG BLOCKPRODUCING_PORT
 
-RUN echo  "{\n" \
-          "   \"localRoots\": [\n" \
-          "         {\n" \
-          "           \"accessPoints\": [\n" \
-          "               { \"address\": \"${BLOCKPRODUCING_IP}\", \"port\": ${BLOCKPRODUCING_PORT} }\n" \
-          "             ],\n" \
-          "           \"advertise\": false,\n" \
-          "           \"valency\": 1\n" \
-          "         }\n" \
-          "       ],\n" \
-          "   \"publicRoots\": [\n" \
-          "         {\n" \
-          "           \"accessPoints\": [\n" \
-          "               {\n" \
-          "                 \"address\": \"relays-new.cardano-mainnet.iohk.io\",\n" \
-          "                 \"port\": 3001\n" \
-          "               }\n" \
-          "             ],\n" \
-          "           \"advertise\": false\n" \
-          "         }\n" \
-          "       ],\n" \
-          "   \"useLedgerAfterSlot\": 84916732\n" \
-          "}\n" \
-          > /node/configuration/topology.json
+RUN <<EOT
+    jq -n \
+        --arg block_producer_ip "$BLOCKPRODUCING_IP" \
+        --arg block_producer_port "$BLOCKPRODUCING_PORT" \
+        '{
+            localRoots: [
+                {
+                accessPoints: [
+                    {
+                        address: $block_producer_ip,
+                        port: $block_producer_port,
+                    }
+                ],
+                advertise: false,
+                valency: 1
+                }
+            ],
+            publicRoots: [
+                {
+                accessPoints: [
+                    {
+                    address: "backbone.cardano-mainnet.iohk.io",
+                    port: 3001
+                    }
+                ],
+                advertise: false
+                },
+                {
+                accessPoints: [
+                    {
+                    address: "backbone.mainnet.emurgornd.com",
+                    port: 3001
+                    }
+                ],
+                advertise: false
+                }
+            ],
+            useLedgerAfterSlot: 99532743
+        }'\
+        > /node/configuration/topology.json
+EOT
+
+# Set path location
+ENV NODE_HOME=/node
+ENV POOL_KEYS=${NODE_HOME}/pool-keys
+ENV DATA=${NODE_HOME}/data
+ENV CONFIGURATION=${NODE_HOME}/configuration
 
 # Set node socket evironment for cardano-cli
 ENV CARDANO_NODE_SOCKET_PATH="/node/ipc/node.socket"
