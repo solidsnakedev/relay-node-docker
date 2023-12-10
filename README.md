@@ -53,7 +53,7 @@ Remember to replace <ip-address> in ./prometheus/prometheus.yml with the proper 
 * replace `<block-producer-port>` with the Port number of the block producer node
 
 ```
-DOCKER_BUILDKIT=1 docker compose build \
+docker compose build \
     --build-arg BLOCKPRODUCING_IP=<block-producer-ip-address> \
     --build-arg BLOCKPRODUCING_PORT=<block-producer-port>
 ```
@@ -61,39 +61,23 @@ DOCKER_BUILDKIT=1 docker compose build \
 ## Upgrade Node
 
 ```
-$ docker compose down
+docker compose down
 ```
 ```
-$ DOCKER_BUILDKIT=1 docker compose build \
+docker compose build \
     --build-arg BLOCKPRODUCING_IP=<blockproducing-ip-address> \
     --build-arg BLOCKPRODUCING_PORT=<blockproducing-port>
 ```
 or 
 ```
-$ DOCKER_BUILDKIT=1 docker compose build cardano-node-relay \
+docker compose build \
     --no-cache \
     --build-arg BLOCKPRODUCING_IP=<blockproducing-ip-address> \
     --build-arg BLOCKPRODUCING_PORT=<blockproducing-port>
 ```
 
-
-## Installing Crontab
-Inside relay-node docker container
+## Access to relay node
 
 ```
 docker exec -it cardano-node-relay bash
-```
-
-```
-apt install cron
-```
-
-Edit crontab file
-```
-crontab -e
-```
-
-Add following instructions
-```
-33 * * * * /usr/local/bin/topologyUpdater.sh
 ```
