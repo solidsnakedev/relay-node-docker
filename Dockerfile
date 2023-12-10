@@ -50,11 +50,11 @@ RUN rm -r /src
 
 # Get latest config files
 RUN wget -P /node/configuration \
-    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/byron-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/shelley-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/alonzo-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/conway-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-world/master/docs/environments/mainnet/config.json
+    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/byron-genesis.json \
+    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/shelley-genesis.json \
+    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/alonzo-genesis.json \
+    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/conway-genesis.json \
+    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/config.json
 
 # Enable EnableP2P for relays
 RUN temp_file=$(mktemp) && \
