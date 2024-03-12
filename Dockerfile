@@ -11,8 +11,8 @@ ARG TAG
 
 RUN <<EOT
     [ -z ${TAG} ] \
-    && URL=$(curl -s https://api.github.com/repos/input-output-hk/cardano-node/releases/latest | jq -r '.assets[] | select(.name | contains("linux")) | .browser_download_url') \
-    || URL=$( curl -s https://api.github.com/repos/input-output-hk/cardano-node/releases/tags/${TAG} | jq -r '.assets[] | select(.name | contains("linux")) | .browser_download_url')
+    && URL=$(curl -s https://api.github.com/repos/IntersectMBO/cardano-node/releases/latest | jq -r '.assets[] | select(.name | contains("linux")) | .browser_download_url') \
+    || URL=$( curl -s https://api.github.com/repos/IntersectMBO/cardano-node/releases/tags/${TAG} | jq -r '.assets[] | select(.name | contains("linux")) | .browser_download_url')
 
     cd src && \
     wget -cO - ${URL} > cardano-node.tar.gz && \
@@ -23,7 +23,7 @@ EOT
 
 # Install libsodium
 RUN cd src && \
-    git clone https://github.com/input-output-hk/libsodium && \
+    git clone https://github.com/IntersectMBO/libsodium && \
     cd libsodium && \
     git checkout dbb48cc && \
     ./autogen.sh && \
@@ -50,11 +50,11 @@ RUN rm -r /src
 
 # Get latest config files
 RUN wget -P /node/configuration \
-    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/byron-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/shelley-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/alonzo-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/conway-genesis.json \
-    https://raw.githubusercontent.com/input-output-hk/cardano-playground/main/static/book.play.dev.cardano.org/environments/mainnet/config.json
+    https://book.world.dev.cardano.org/environments/mainnet/byron-genesis.json \
+    https://book.world.dev.cardano.org/environments/mainnet/shelley-genesis.json \
+    https://book.world.dev.cardano.org/environments/mainnet/alonzo-genesis.json \
+    https://book.world.dev.cardano.org/environments/mainnet/conway-genesis.json \
+    https://book.world.dev.cardano.org/environments/mainnet/config.json
 
 # Enable EnableP2P for relays
 RUN temp_file=$(mktemp) && \
