@@ -17,6 +17,7 @@ RUN <<EOT
     cd src && \
     wget -cO - ${URL} > cardano-node.tar.gz && \
     tar -xvf cardano-node.tar.gz &&
+    cd bin/
     mv cardano-node /usr/local/bin &&
     mv cardano-cli /usr/local/bin
 EOT
