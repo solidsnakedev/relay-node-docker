@@ -97,6 +97,7 @@ RUN <<EOT
         --arg block_producer_ip "$BLOCKPRODUCING_IP" \
         --arg block_producer_port "$BLOCKPRODUCING_PORT" \
         '{
+            "bootstrapPeers": [],
             localRoots: [
                 {
                     accessPoints: [
