@@ -1,9 +1,10 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:latest
 
-# Install Cardano dependencies
+# Install Cardano dependencies and tools
 RUN apt-get update -y && \
-    apt-get install automake build-essential pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make g++ tmux git jq wget libncursesw5 libtool autoconf liblmdb-dev curl vim -y
+  apt-get install automake build-essential pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make g++ tmux git jq wget libncursesw5 libtool autoconf liblmdb-dev -y && \
+  apt-get install curl vim -y
 
 RUN mkdir src
 
