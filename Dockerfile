@@ -93,45 +93,35 @@ ARG BLOCKPRODUCING_IP
 ARG BLOCKPRODUCING_PORT
 
 RUN <<EOT
-    jq -n \
-        --arg block_producer_ip "$BLOCKPRODUCING_IP" \
-        --arg block_producer_port "$BLOCKPRODUCING_PORT" \
-        '{
-            "bootstrapPeers": [],
-            localRoots: [
-                {
-                    accessPoints: [
-                        {
-                            address: $block_producer_ip,
-                            port: ($block_producer_port | tonumber)
-                        }
-                    ],
-                    advertise: false,
-                    valency: 1
-                }
-            ],
-            publicRoots: [
-                {
-                    accessPoints: [
-                        {
-                            address: "backbone.cardano.iog.io",
-                            port: 3001
-                        },
-                        {
-                            address: "backbone.mainnet.emurgornd.com",
-                            port: 3001
-                        },
-                        {
-                            address: "backbone.mainnet.cardanofoundation.org",
-                            port: 3001
-                        }
-                    ],
-                    advertise: false
-                }
-            ],
-            useLedgerAfterSlot: 99532743
-        }' > /node/configuration/topology.json
+    jq -n --arg block_producer_ip "$BLOCKPRODUCING_IP" --arg block_producer_port "$BLOCKPRODUCING_PORT" '{
+        "bootstrapPeers": [
+            {"address": "backbone.cardano.iog.io", "port": 3001},
+            {"address": "backbone.mainnet.emurgornd.com", "port": 3001},
+            {"address": "backbone.mainnet.cardanofoundation.org", "port": 3001}
+        ],
+        "localRoots": [
+            {
+                "accessPoints": [
+                    {"address": $block_producer_ip, "port": ($block_producer_port | tonumber)}
+                ],
+                "advertise": false,
+                "valency": 1
+            }
+        ],
+        "publicRoots": [
+            {
+                "accessPoints": [
+                    {"address": "backbone.cardano.iog.io", "port": 3001},
+                    {"address": "backbone.mainnet.emurgornd.com", "port": 3001},
+                    {"address": "backbone.mainnet.cardanofoundation.org", "port": 3001}
+                ],
+                "advertise": false
+            }
+        ],
+        "useLedgerAfterSlot": 99532743
+    }' > /node/configuration/topology.json
 EOT
+
 
 # Set network for cardano-cli commands
 ENV NETWORK="--mainnet"
