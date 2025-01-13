@@ -11,6 +11,7 @@ global:
 scrape_configs:
   # The job name is added as a label job=<job_name> to any timeseries scraped from this config.
   - job_name: 'prometheus'
+    fallback_scrape_protocol: PrometheusText0.0.4
     static_configs:
       # Replace <ip-address> with block producer ip address
       - targets: ['<ip-address>:9100']

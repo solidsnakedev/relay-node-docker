@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+set -xe
 
 HOSTADDR="0.0.0.0"
 PORT="6000"

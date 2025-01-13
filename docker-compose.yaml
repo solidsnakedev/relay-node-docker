@@ -1,8 +1,6 @@
 services:
-
   cardano-node-relay:
-    build: .
-    image: cardano-node-relay
+    image: ghcr.io/intersectmbo/cardano-node:10.1.4
     container_name: cardano-node-relay
     ports:
       - 6000:6000 # Cardano node relay port
@@ -10,7 +8,14 @@ services:
     volumes:
       - ./node/db/:/node/db
       - ./node/ipc/:/node/ipc
-      - ./node/logs/:/node/logs
+      - ./node/configuration:/node/configuration
+      - ./scripts:/scripts
+    environment:
+      - NETWORK=--mainnet
+      - MAGIC_NUMBER=764824073
+      - CARDANO_NODE_SOCKET_PATH=/node/ipc/node.socket
+    restart: always
+    entrypoint: /scripts/run-cardano-node.sh
 
   node_exporter: # Listening by default on port 9100
     image: quay.io/prometheus/node-exporter:latest
