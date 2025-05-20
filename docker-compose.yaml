@@ -1,6 +1,6 @@
 services:
   cardano-node-relay:
-    image: ghcr.io/intersectmbo/cardano-node:10.1.4
+    image: ghcr.io/intersectmbo/cardano-node:10.3.1
     container_name: cardano-node-relay
     ports:
       - 6000:6000 # Cardano node relay port
@@ -26,7 +26,7 @@ services:
       - '--path.rootfs=/host'
     network_mode: host
     pid: host
-    restart: unless-stopped
+    restart: always
     volumes:
       - '/:/host:ro,rslave'
     depends_on:
@@ -39,6 +39,7 @@ services:
       - 9090:9090
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
     depends_on:
       - node_exporter
 
@@ -50,5 +51,6 @@ services:
       - 3000:3000 # Grafana monitor port
     volumes:
       - ./grafana-data:/var/lib/grafana
+    restart: always
     depends_on:
       - prometheus

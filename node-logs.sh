@@ -1,0 +1,1 @@
+docker compose logs cardano-node-relay -f --tail 10
